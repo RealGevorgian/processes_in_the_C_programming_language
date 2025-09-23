@@ -7,15 +7,17 @@ All assignments and this report are hosted in the GitHub repository: https://git
 
 ## Folder Structure
 
-processes_in_the_C_programming_language/
+```
+processes_assignment/
 ├── src/
-│ ├── assignment1.c # Basic process creation with fork()
-│ ├── assignment2.c # Using wait() and waitpid() for synchronization
-│ ├── assignment3.c # Understanding atexit() for process cleanup
-│ ├── assignment4.c # Fork and exit status handling
-│ └── assignment5.c # Handling zombie processes
-├── Report.md # Detailed analysis of all assignments
-└── README.md # Project overview and instructions
+│   ├── assignment1.c  # Basic process creation with fork()
+│   ├── assignment2.c  # Using wait() and waitpid() for synchronization
+│   ├── assignment3.c  # Understanding atexit() for process cleanup
+│   ├── assignment4.c  # Fork and exit status handling
+│   └── assignment5.c  # Handling zombie processes
+├── Report.md          # Detailed analysis of all assignments
+└── README.md          # Project overview and instructions
+```
 
 
 ---
