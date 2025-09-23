@@ -8,7 +8,7 @@ All assignments and this report are hosted in the GitHub repository: https://git
 ## Folder Structure
 
 ```
-processes_assignment/
+processes_in_the_C_programming_language/
 ├── src/
 │   ├── assignment1.c  # Basic process creation with fork()
 │   ├── assignment2.c  # Using wait() and waitpid() for synchronization
