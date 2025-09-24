@@ -3,54 +3,71 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 
-void show_zombie(){
-	
-	pid_t pid = fork();
-	
-	if (pid == 0) {
-		printf("(PID %d) Child created, and is now active\n", getpid());
-		exit(0);
-	} else if (pid > 0) {
-		printf("(PID %d) Parent created child (PID %d)\n", getpid(), pid);
-		sleep(15); // During this time we can see the zombie with htop,top, or ps
-	} else {
-	        perror("fork failed!");
-       		exit(1);
-	}
-}	
+/*
+ * Assignment 5: Mastering Zombie Process Management
+ * Objective: Illustrate zombie process creation and prevention using wait().
+ * Approach: Implement two versions—one to create a zombie with a long sleep for observation,
+ *           and another to prevent it with wait(), followed by an explanation of the mechanism.
+ * Author: Gevorg
+ * Date: September 24, 2025, 10:00 PM +04
+ */
 
-void deny_zombie() {
-   	
-	pid_t pid = fork();
-    	int status;
-    
-    	if (pid == 0) {
-        	printf("(PID %d) Child created, and is active\n", getpid());
-        	exit(0);
-    	} else if (pid > 0) {
-        	printf("(PID %d) Parent created Child (PID %d) and will wait\n", getpid(), pid);
-        	wait(&status);
-        	printf("Parent (PID %d) reaped Child (PID %d) with status %d\n", getpid(), pid, WEXITSTATUS(status));
-    	} else {
-        	perror("Fork failed");
-        	exit(1);
-    	}
+void createZombieProcess() {
+    // Function to demonstrate zombie process creation
+    pid_t childPid = fork();
+    if (childPid == 0) {
+        // Child process context - exits immediately to become a zombie
+        printf("Child Process (PID %d) has started and will exit now.\n", getpid());
+        exit(0); // Normal exit triggers zombie state if not reaped
+    } else if (childPid > 0) {
+        printf("Parent Process (PID %d) spawned Child (PID %d) without reaping.\n", getpid(), childPid);
+        printf("Observation Tip: Run 'ps aux | grep Z' or check 'htop' (enable Z state) now for ~15 seconds.\n");
+        sleep(15); // Extended pause to allow manual zombie observation
+    } else {
+        fprintf(stderr, "Parent (PID %d) failed to fork child: ", getpid());
+        perror(NULL);
+        exit(1);
+    }
+}
+
+void preventZombieProcess() {
+    // Function to demonstrate zombie prevention with wait()
+    pid_t childPid = fork();
+    int exitStatus;
+    if (childPid == 0) {
+        // Child process context - exits to test wait() reaping
+        printf("Child Process (PID %d) is active and will terminate.\n", getpid());
+        exit(0); // Normal exit, reaped by parent
+    } else if (childPid > 0) {
+        printf("Parent Process (PID %d) spawned Child (PID %d) and will reap it.\n", getpid(), childPid);
+        if (wait(&exitStatus) == -1) {
+            fprintf(stderr, "Parent (PID %d) failed to wait for Child (PID %d): ", getpid(), childPid);
+            perror(NULL);
+            exit(1);
+        }
+        // Verifing and reporting the child's exit status
+        if (WIFEXITED(exitStatus)) {
+            printf("Parent (PID %d) successfully reaped Child (PID %d) with status %d.\n", 
+                   getpid(), childPid, WEXITSTATUS(exitStatus));
+        } else {
+            printf("Parent (PID %d): Child (PID %d) did not exit normally.\n", getpid(), childPid);
+        }
+    } else {
+        fprintf(stderr, "Parent (PID %d) failed to fork child: ", getpid());
+        perror(NULL);
+        exit(1);
+    }
 }
 
 int main() {
-    	
-	printf("Starting the illustration -> PID: %d\n", getpid());
+    printf("Launching Zombie Process Demonstration - Parent PID: %d\n", getpid());
 
-    	printf("1-st version of the solution: Creating the zombie process.........\n");
-    	show_zombie();
+    printf("Step 1: Executing version to create a zombie process...\n");
+    createZombieProcess();
 
-    	printf("2-nd version of the solution: Trying to deny the zombie process..........\n");
-    	deny_zombie();
+    printf("Step 2: Executing version to prevent a zombie process...\n");
+    preventZombieProcess();
 
-    	printf("(PID %d) Parent completed all illustrations\n", getpid());
-    
-    	return 0;
-
+    printf("Parent Process (PID %d) has completed the demonstration.\n", getpid());
+    return 0; // Normal program termination
 }
-
-
