@@ -307,3 +307,8 @@ Key to Flags:
   C (compressed), x (unknown), o (OS specific), E (exclude),
   D (mbind), l (large), p (processor specific)
 gevorgg@ubuntu-aua-os:~/processes_in_the_C_programming_language/src$
+
+
+## Conclusion
+
+As I wrap up this homework, I’m really proud of how much I’ve learned about the C compilation process. Exploring the inner workings of number 8 program with tools like nm, objdump, and readelf has been a fun challenge. The nm tool was a lifesaver for spotting undefined symbols, while objdump’s disassembly helped me trace the assembly code step-by-step—though I did wrestle with those empty output files at first! The readelf insights into ELF headers and sections were a bit tricky to grasp, but they clarified how linking ties everything together. Thanks to my persistence in troubleshooting those hiccups, I’ve turned a complex task into a personal victory, and I’m excited to see how these skills will help me grow as a programmer!
